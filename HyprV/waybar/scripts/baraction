@@ -1,0 +1,65 @@
+#!/bin/sh
+
+#Check the version 
+HYPRVER=$(readlink -f ~/.config/waybar/config.jsonc | cut -d '-' -f1 | cut -d '/' -f8)
+case $HYPRVER in
+    v1)
+        VER="v1-"
+        ;;
+
+    v2)
+        VER="v2-"
+        ;;
+
+    v3)
+        VER="v3-"
+        ;;
+
+esac
+
+# Check which waybar theme is set
+THEMEIS=$(readlink -f ~/.config/waybar/style.css | cut -d '-' -f3)
+
+#if the theme is not dark then we need to switch to it
+if [[ $THEMEIS == "" ]]; then
+    SWITCHTO="-dark"
+    MODESTR="Dark"
+else
+    MODESTR="Light"
+fi
+
+#show a message
+notify-send -h string:x-canonical-private-synchronous:sys-notify -u low "switching to $MODESTR"
+
+#set the waybar theme
+ln -sf ~/.config/HyprV/waybar/style/$VER'style'$SWITCHTO.css ~/.config/waybar/style.css
+
+#set the wofi theme
+ln -sf ~/.config/HyprV/wofi/style/$VER'style'$SWITCHTO.css ~/.config/wofi/style.css
+
+#set the mako theme
+ln -sf ~/.config/HyprV/mako/conf/config$SWITCHTO ~/.config/mako/config
+
+#set the xfce theme
+xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita$SWITCHTO"
+xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita$SWITCHTO"
+
+#set the GTK theme
+gsettings set org.gnome.desktop.interface gtk-theme "Adwaita$SWITCHTO"
+gsettings set org.gnome.desktop.interface icon-theme "Adwaita$SWITCHTO"
+
+#change the background image and be cool about it ;)
+swww img ~/.config/HyprV/backgrounds/$VER'background'$SWITCHTO.jpg --transition-fps 60 --transition-type wipe --transition-duration 2
+
+#update the sddm image
+cp -f ~/.config/HyprV/backgrounds/$VER'background'$SWITCHTO.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
+
+#reset mako
+sleep 1
+pkill mako
+mako &
+
+#restart the waybar
+#killall -SIGUSR2 waybar <-- start causing web brwsers to close so switched to below...
+pkill waybar
+exec waybar
