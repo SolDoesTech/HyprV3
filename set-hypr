@@ -105,7 +105,7 @@ if [ -f "$ISYAY" ]; then
     echo -e "$COK - yay was located, moving on."
 else 
     echo -e "$CWR - Yay was NOT located.. yay is (still) required"
-    read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to install yay (y,n) ' INSTYAY
+    read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install yay (y,n) ' INSTYAY
     if [[ $INSTYAY == "Y" || $INSTYAY == "y" ]]; then
         git clone https://aur.archlinux.org/yay-git.git &>> $INSTLOG
         cd yay-git
@@ -120,7 +120,7 @@ else
 fi
 
 ### Disable wifi powersave mode ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
 if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
     LOC="/etc/NetworkManager/conf.d/wifi-powersave.conf"
     echo -e "$CNT - The following file has been created $LOC."
@@ -133,13 +133,13 @@ if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
 fi
 
 ### Install all of the above pacakges ####
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
 
     #Setup Nvidia if was selected
     if [[ $ISNVIDIA ]]; then
         echo -e "$CNT - Nvidia setup stage, this may take a while..."
-        for SOFTWR in nvidia-dkms qt5-wayland qt5ct libva nvidia-vaapi-driver-git
+        for SOFTWR in nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
         do
             #First lets see if the package is there
             if yay -Qs $SOFTWR > /dev/null ; then
@@ -163,7 +163,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     fi
 
     #Stage 1
-    echo -e "\n$CNT - Stage 1 - Installing main components, this may take a while..."
+    echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
     for SOFTWR in hyprland kitty waybar-hyprland swww swaylock-effects wofi wlogout mako xdg-desktop-portal-hyprland swappy grim slurp thunar
     do
         #First lets see if the package is there
@@ -182,7 +182,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     done
 
     #Stage 2
-    echo -e "\n$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
+    echo -e "$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
     for SOFTWR in polkit-gnome python-requests pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller btop pacman-contrib
     do
         #First lets see if the package is there
@@ -201,7 +201,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
     done
 
     #Stage 3
-    echo -e "\n$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
+    echo -e "$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
     for SOFTWR in starship ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git 
     do
         #First lets see if the package is there
@@ -235,7 +235,7 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
 fi
 
 ### Copy Config Files ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) ' CFG
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
     echo -e "$CNT - Copying config files..."
 
@@ -263,9 +263,9 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     cp ~/.config/HyprV/hypr/* ~/.config/hypr/
     ln -sf ~/.config/HyprV/kitty/kitty.conf ~/.config/kitty/kitty.conf
     ln -sf ~/.config/HyprV/mako/conf/config-dark ~/.config/mako/config
-    ln -sf ~/.config/HyprV/swaylock/config ~/.config/waylock/config
+    ln -sf ~/.config/HyprV/swaylock/config ~/.config/swaylock/config
     ln -sf ~/.config/HyprV/waybar/conf/v3-config.jsonc ~/.config/waybar/config.jsonc
-    ln -sf ~/.config/HyprV/waybar/style/v3-style-darc.css ~/.config/waybar/style.css
+    ln -sf ~/.config/HyprV/waybar/style/v3-style-dark.css ~/.config/waybar/style.css
     ln -sf ~/.config/HyprV/wlogout/layout ~/.config/wlogout/layout
     ln -sf ~/.config/HyprV/wofi/config ~/.config/wofi/config
     ln -sf ~/.config/HyprV/wofi/style/v3-style-dark.css ~/.config/wofi/style.css
@@ -283,9 +283,6 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
         echo -e "$CWR - $WLDIR NOT found, creating..."
         sudo mkdir $WLDIR
     fi 
-    sudo cp extras/hyprland.desktop /usr/share/wayland-sessions/
-    
-    cp extras/start-hypr ~/
     
     if [[ $ISNVIDIA ]]; then
         cp Extras/start-hypr-nvidia ~/.start-hypr-nvidia
@@ -304,7 +301,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
 fi
 
 ### Install the starship shell ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to activate the starship shell? (y,n) ' STAR
 if [[ $STAR == "Y" || $STAR == "y" ]]; then
     # install the starship shell
     echo -e "$CNT - Hansen Crusher, Engage!"
@@ -315,7 +312,7 @@ if [[ $STAR == "Y" || $STAR == "y" ]]; then
 fi
 
 ### Install software for Asus ROG laptops ###
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - For ASUS ROG Laptops - Would you like to install Asus ROG software support? (y,n) ' ROG
+read -rep $'[\e[1;33mACTION\e[0m] - For ASUS ROG Laptops - Would you like to install Asus ROG software support? (y,n) ' ROG
 if [[ $ROG == "Y" || $ROG == "y" ]]; then
     echo -e "$CNT - Adding Keys..."
     sudo pacman-key --recv-keys 8F654886F17D497FEFE3DB448B15A6B0E9A3FA35 &>> $INSTLOG
@@ -326,7 +323,6 @@ if [[ $ROG == "Y" || $ROG == "y" ]]; then
     LOC="/etc/pacman.conf"
     echo -e "$CNT - Updating $LOC with g14 repo."
     echo -e "\n[g14]\nServer = https://arch.asus-linux.org" | sudo tee -a $LOC &>> $INSTLOG
-    echo -e "\n"
     echo -e "$CNT - Update the system..."
     sudo pacman -Suy --noconfirm &>> $INSTLOG
 
@@ -345,12 +341,12 @@ fi
 ### Script is done ###
 echo -e "$CNT - Script had completed!"
 if [[ $ISNVIDIA ]]; then 
-    echo -e "Since we attempted to setup Nvidia the script will now end and you should reboot.
-    type 'reboot' at the prompt when ready."
+    echo -e "$CAT - Since we attempted to setup Nvidia the script will now end and you should reboot.
+    type 'reboot' at the prompt and hit Enter when ready."
     exit
 fi
 
-read -n1 -rep $'[\e[1;33mACTION\e[0m] - Would you like to start Hyprland now? (y,n) ' HYP
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to start Hyprland now? (y,n) ' HYP
 if [[ $HYP == "Y" || $HYP == "y" ]]; then
     exec sudo systemctl start sddm &>> $INSTLOG
 else
