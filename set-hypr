@@ -73,7 +73,7 @@ fi
 sleep 1
 
 read -rep $'[\e[1;33mACTION\e[0m] - Do you have an Nvidia GPU? (y,n) ' ISNVIDIA
-if [[ $ISNVIDIA != "Y" || $ISNVIDIA != "y" ]]; then
+if [[ $ISNVIDIA == "Y" || $ISNVIDIA == "y" ]]; then
     echo -e "$CWR - Please note that support for Nvidia GPUs is limited.
     This script would attempt to setup the things best way it can.
     If you end up with a black screen after trying to login then the GPU is likely the issue."
@@ -85,10 +85,13 @@ fi
 sleep 3
 
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to continue with the install (y,n) ' CONTINST
-if [[ $CONTINST != "Y" || $CONTINST != "y" ]]; then
+if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
+    echo -e "$CNT - Setup starting"
+else
     echo -e "$CNT - This script would now exit, no changes were made to your system."
     exit
 fi
+
 
 
 echo -e "$CNT - This script will run some commands that require sudo. You will be prompted to enter your password.
