@@ -62,7 +62,7 @@ CWR="[\e[1;35mWARNING\e[0m]"
 CAC="[\e[1;33mACTION\e[0m]"
 INSTLOG="install.log"
 
-#clear the screen
+# clear the screen
 clear
 
 # set some expectations for the user
@@ -135,21 +135,26 @@ else
         echo -e "$CER - Yay is (still) required for this script, now exiting"
         exit
     fi
+    # update the yay database
+    echo -e "$CNT - Updating the yay database..."
     yay -Suy --noconfirm &>> $INSTLOG
 fi
 
 # function that will test for a package and if not found it will attempt to install it
 install_software() {
-    #First lets see if the package is there
+    # First lets see if the package is there
     if yay -Q $1 > /dev/null ; then
         echo -e "$COK - $1 is already installed."
     else
+        # no package found so installing
         echo -e "$CNT - Now installing $1 ..."
         yay -S --noconfirm $1 &>> $INSTLOG
+        # test to make sure package installed
         if yay -Q $1 > /dev/null ; then
-            echo -e "$COK - $1 was installed."
+            echo -e "\e[1A\e[K$COK - $1 was installed."
         else
-            echo -e "$CER - $1 install had failed, please check the install.log"
+            # if this is hit then a package is missing, exit to review log
+            echo -e "\e[1A\e[K$CER - $1 install had failed, please check the install.log"
             exit
         fi
     fi
@@ -158,7 +163,7 @@ install_software() {
 ### Install all of the above pacakges ####
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
-    #Setup Nvidia if it was selected
+    # Setup Nvidia if it was selected
     if [[ $ISNVIDIA ]]; then
         echo -e "$CNT - Nvidia setup stage, this may take a while..."
         for SOFTWR in linux-headers nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
@@ -166,27 +171,27 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
             install_software $SOFTWR
         done
     
-        #update config
+        # update config
         sudo sed -i 's/MODULES=()/MODULES=(nvidia nvidia_modeset nvidia_uvm nvidia_drm)/' /etc/mkinitcpio.conf
         sudo mkinitcpio --config /etc/mkinitcpio.conf --generate /boot/initramfs-custom.img
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
 
-    #Stage 1 - main components
+    # Stage 1 - main components
     echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
     for SOFTWR in hyprland kitty jq mako waybar-hyprland swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar
     do
            install_software $SOFTWR 
     done
 
-    #Stage 2 - more tools
+    # Stage 2 - more tools
     echo -e "$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
     for SOFTWR in polkit-gnome python-requests pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller btop pacman-contrib
     do
         install_software $SOFTWR
     done
 
-    #Stage 3 - some visual tools
+    # Stage 3 - some visual tools
     echo -e "$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
     for SOFTWR in starship ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git 
     do
@@ -213,12 +218,11 @@ read -rep $'[\e[1;33mACTION\e[0m] - Would you like to copy config files? (y,n) '
 if [[ $CFG == "Y" || $CFG == "y" ]]; then
     echo -e "$CNT - Copying config files..."
 
-    #copy the HyprV directory
+    # copy the HyprV directory
     cp -R HyprV ~/.config/
 
-    #Setup each appliaction
-    
-    #check for existing config folders sn backup 
+    # Setup each appliaction
+    # check for existing config folders and backup 
     for DIR in hypr kitty mako swaylock waybar wlogout wofi 
     do 
         DIRPATH=~/.config/$DIR
@@ -228,11 +232,11 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
             echo -e "$COK - Backed up $DIR to $DIRPATH-back."
         fi
 
-        #make a new empty folder
+        # make new empty folders
         mkdir -p $DIRPATH &>> $INSTLOG
     done
 
-    #link up the config
+    # link up the config files
     echo -e "$CNT - Setting some up the new config..." 
     cp ~/.config/HyprV/hypr/* ~/.config/hypr/
     ln -sf ~/.config/HyprV/kitty/kitty.conf ~/.config/kitty/kitty.conf
@@ -258,15 +262,20 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
         sudo mkdir $WLDIR
     fi 
     
+    # stage the .desktop file
+    sudo cp Extras/hyprland.desktop /usr/share/wayland-sessions/
+    
     if [[ $ISNVIDIA ]]; then
+        # setup nvidia startup file
         cp Extras/start-hypr-nvidia ~/.start-hypr-nvidia
         sudo sed -i 's/Exec=Hyprland/Exec=\/home\/'$USER'\/.start-hypr-nvidia/' /usr/share/wayland-sessions/hyprland.desktop
     else
+        # setup non nvidia startup file
         cp Extras/start-hypr-amd ~/.start-hypr-amd
         sudo sed -i 's/Exec=Hyprland/Exec=\/home\/'$USER'\/.start-hypr-amd/' /usr/share/wayland-sessions/hyprland.desktop
     fi
 
-    #setup the first look and feel as dark
+    # setup the first look and feel as dark
     xfconf-query -c xsettings -p /Net/ThemeName -s "Adwaita-dark"
     xfconf-query -c xsettings -p /Net/IconThemeName -s "Adwaita-dark"
     gsettings set org.gnome.desktop.interface gtk-theme "Adwaita-dark"
@@ -311,7 +320,7 @@ if [[ $ROG == "Y" || $ROG == "y" ]]; then
     sudo systemctl enable --now supergfxd &>> $INSTLOG
     sleep 2
 
-    #add the keybinding file to the config
+    # add the ROG keybinding file to the config
     echo -e "\nsource = ~/.config/hypr/rog-g15-strix-2021-binds.conf" >> ~/.config/hypr/hyprland.conf
 fi
 
