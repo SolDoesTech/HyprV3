@@ -68,45 +68,43 @@ clear
 # set some expectations for the user
 echo -e "$CNT - You are about to execute a script that would attempt to setup Hyprland.
 Please note that Hyprland is still in Beta."
-
 sleep 1
 
+# attempt to discover if this is a VM or not
 echo -e "$CNT - Checking for Physical or VM..."
 ISVM=$(hostnamectl | grep Chassis)
 echo -e "Using $ISVM"
 if [[ $ISVM == *"vm"* ]]; then
     echo -e "$CWR - Please note that VMs are not fully supported and if you try to run this on
     a Virtual Machine there is a high chance this will fail."
+    sleep 1
 fi
 
+# let the user know that we will use sudo
+echo -e "$CNT - This script will run some commands that require sudo. You will be prompted to enter your password.
+If you are worried about entering your password then you may want to review the content of the script."
 sleep 1
 
-read -rep $'[\e[1;33mACTION\e[0m] - Do you have an Nvidia GPU? (y,n) ' ISNVIDIA
-if [[ $ISNVIDIA == "Y" || $ISNVIDIA == "y" ]]; then
-    echo -e "$CWR - Please note that support for Nvidia GPUs is limited.
-    This script would attempt to setup the things best way it can.
-    If you end up with a black screen after trying to login then the GPU is likely the issue."
-    
-    #set the variable to true
-    ISNVIDIA=true
-fi
-
-sleep 3
-
+# give the user an option to exit out
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to continue with the install (y,n) ' CONTINST
 if [[ $CONTINST == "Y" || $CONTINST == "y" ]]; then
-    echo -e "$CNT - Setup starting"
+    echo -e "$CNT - Setup starting..."
 else
     echo -e "$CNT - This script would now exit, no changes were made to your system."
     exit
 fi
 
-
-
-echo -e "$CNT - This script will run some commands that require sudo. You will be prompted to enter your password.
-If you are worried about entering your password then you may want to review the content of the script."
-
-sleep 3
+# Ask if the use has an NVIDIA GPU
+read -rep $'[\e[1;33mACTION\e[0m] - Do you have an Nvidia GPU? (y,n) ' ISNVIDIA
+if [[ $ISNVIDIA == "Y" || $ISNVIDIA == "y" ]]; then
+    echo -e "$CWR - Please note that support for Nvidia GPUs is limited.
+    This script would attempt to set things up the best way it can.
+    If you do end up with a black screen after trying to login then the GPU is likely the issue."
+    
+    ISNVIDIA=true
+else
+    ISNVIDIA=false
+fi
 
 ### Disable wifi powersave mode ###
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
@@ -133,7 +131,6 @@ else
         cd yay-git
         makepkg -si --noconfirm &>> ../$INSTLOG
         cd ..
-        
     else
         echo -e "$CER - Yay is (still) required for this script, now exiting"
         exit
@@ -141,6 +138,7 @@ else
     yay -Suy --noconfirm &>> $INSTLOG
 fi
 
+# function that will test for a package and if not found it will attempt to install it
 install_software() {
     #First lets see if the package is there
     if yay -Q $1 > /dev/null ; then
