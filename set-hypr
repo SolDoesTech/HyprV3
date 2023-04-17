@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # HyprV3 By SolDoesTech - 
-# you may copy, edit, ditribute this script any way you like, enjoy! :)
+# you may copy, edit and ditribute this script any way you like, enjoy! :)
 
 # The follwoing will attempt to install all needed packages to run Hyprland
 # This is a quick and dirty script there are some error checking
@@ -9,40 +9,49 @@
 #
 # Below is a list of the packages that would be installed
 #
-# hyprland: This is the Hyprland compositor
-# kitty: This is the default terminal
-# waybar-hyprland: This is a fork of waybar with Hyprland workspace support
-# swww: This is used to set a desktop background image
-# swaylock-effects: This allows for the locking of the desktop its a fork that adds some editional visual effects
-# wofi: This is an application launcher menu
-# wlogout: This is a logout menu that allows for shutdown, reboot and sleep
-# mako: This is a graphical notification daemon
+# Nvidia only
+# linux-headers: Headers and scripts for building modules for the Linux kernel
+# nvidia-dkms: NVIDIA drivers - module sources
+# qt5-wayland: Provides APIs for Wayland
+# qt5ct: Qt5 Configuration Utility
+# libva: Video Acceleration (VA) API for Linux
+# libva-nvidia-driver-git [AUR]: VA-API implementation that uses NVDEC as a backend (git version)
+
+# hyprland: a highly customizable dynamic tiling Wayland compositor
+# kitty: A modern, hackable, featureful, OpenGL-based terminal emulator
+# jq: Command-line JSON processor
+# mako: Lightweight notification daemon for Wayland
+# waybar-hyprland [AUR]: Highly customizable Wayland bar for Sway and Wlroots based compositors, with workspaces support for Hyprland
+# swww [AUR]: Efficient animated wallpaper daemon for wayland, controlled at runtime.
+# swaylock-effects [AUR]: A fancier screen locker for Wayland.
+# wofi: launcher for wlroots-based wayland compositors
+# wlogout [AUR]: Logout menu for wayland
 # xdg-desktop-portal-hyprland: xdg-desktop-portal backend for hyprland
-# swappy: This is a screenshot editor tool
-# grim: This is a screenshot tool it grabs images from a Wayland compositor
-# slurp: This helps with screenshots, it selects a region in a Wayland compositor
-# thunar: This is a graphical file manager
-# polkit-gnome: needed to get superuser access on some graphical appliaction
-# python-requests: needed for the weather module script to execute
-# pamixer: This helps with audio settings such as volume
-# pavucontrol: GUI for managing audio and audio devices
-# brightnessctl: used to control monitor and keyboard bright level
-# bluez: the bluetooth service
-# bluez-utils: command line utilities to interact with bluettoth devices
-# blueman: Graphical bluetooth manager
+# swappy: A Wayland native snapshot editing tool
+# grim: Screenshot utility for Wayland
+# slurp: Select a region in a Wayland compositor
+# thunar: Modern, fast and easy-to-use file manager for Xfce
+# polkit-gnome: Legacy polkit authentication agent for GNOME
+# python-requests: Python HTTP for Humans
+# pamixer: Pulseaudio command-line mixer like amixer
+# pavucontrol: PulseAudio Volume Control
+# brightnessctl: Lightweight brightness control tool
+# bluez: Daemons for the bluetooth protocol stack
+# bluez-utils: Development and debugging utilities for the bluetooth protocol stack
+# blueman: GTK+ Bluetooth Manager
 # network-manager-applet: Applet for managing network connection
-# gvfs: adds missing functionality to thunar such as automount usb drives
-# thunar-archive-plugin: Provides a front ent for thunar to work with compressed files
-# file-roller: Backend set of tools for working with compressed files
-# btop: Resource monitor that shows usage and stats for processor, memory, disks, network and processes.
-# pacman-contrib: adds additional tools for pacman. needed for showing system updates in the waybar
-# starship: allows to customize the shell prompt
-# ttf-jetbrains-mono-nerd: Som nerd fonts for icons and overall look
-# noto-fonts-emoji: fonts needed by the weather script in the top bar
-# lxappearance: used to set GTK theme
-# xfce4-settings: set of tools for xfce, needed to set GTK theme
-# sddm-git: developement version of SDDM which is a display manager for graphical login
-# sddm-sugar-candy-git: an sddm theme my theme is based on (copy of)
+# gvfs: Virtual filesystem implementation for GIO
+# thunar-archive-plugin: Adds archive operations to the Thunar file context menus
+# file-roller: Create and modify archives
+# btop: A monitor of system resources, bpytop ported to C++
+# pacman-contrib: Contributed scripts and tools for pacman systems
+# starship: The cross-shell prompt for astronauts
+# ttf-jetbrains-mono-nerd: Patched font JetBrains Mono from nerd fonts library
+# noto-fonts-emoji: Google Noto emoji fonts
+# lxappearance: Feature-rich GTK+ theme switcher of the LXDE Desktop
+# xfce4-settings: Xfce's Configuration System
+# sddm-git [AUR]: The Simple Desktop Display Manager
+# sddm-sugar-candy-git [AUR]: Sugar Candy is the sweetest login theme available for the SDDM display manager.
 
 # set some colors
 CNT="[\e[1;36mNOTE\e[0m]"
@@ -99,7 +108,20 @@ If you are worried about entering your password then you may want to review the 
 
 sleep 3
 
-#### Check for pacake manager ####
+### Disable wifi powersave mode ###
+read -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
+if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
+    LOC="/etc/NetworkManager/conf.d/wifi-powersave.conf"
+    echo -e "$CNT - The following file has been created $LOC."
+    echo -e "[connection]\nwifi.powersave = 2" | sudo tee -a $LOC &>> $INSTLOG
+    echo -e "\n"
+    echo -e "$CNT - Restarting NetworkManager service..."
+    sleep 1
+    sudo systemctl restart NetworkManager &>> $INSTLOG
+    sleep 3
+fi
+
+#### Check for package manager ####
 ISYAY=/sbin/yay
 if [ -f "$ISYAY" ]; then 
     echo -e "$COK - yay was located, moving on."
@@ -119,41 +141,31 @@ else
     yay -Suy --noconfirm &>> $INSTLOG
 fi
 
-### Disable wifi powersave mode ###
-read -rep $'[\e[1;33mACTION\e[0m] - Would you like to disable WiFi powersave? (y,n) ' WIFI
-if [[ $WIFI == "Y" || $WIFI == "y" ]]; then
-    LOC="/etc/NetworkManager/conf.d/wifi-powersave.conf"
-    echo -e "$CNT - The following file has been created $LOC."
-    echo -e "[connection]\nwifi.powersave = 2" | sudo tee -a $LOC &>> $INSTLOG
-    echo -e "\n"
-    echo -e "$CNT - Restarting NetworkManager service..."
-    sleep 1
-    sudo systemctl restart NetworkManager &>> $INSTLOG
-    sleep 3
-fi
+install_software() {
+    #First lets see if the package is there
+    if yay -Q $1 > /dev/null ; then
+        echo -e "$COK - $1 is already installed."
+    else
+        echo -e "$CNT - Now installing $1 ..."
+        yay -S --noconfirm $1 &>> $INSTLOG
+        if yay -Q $1 > /dev/null ; then
+            echo -e "$COK - $1 was installed."
+        else
+            echo -e "$CER - $1 install had failed, please check the install.log"
+            exit
+        fi
+    fi
+}
 
 ### Install all of the above pacakges ####
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
-
-    #Setup Nvidia if was selected
+    #Setup Nvidia if it was selected
     if [[ $ISNVIDIA ]]; then
         echo -e "$CNT - Nvidia setup stage, this may take a while..."
-        for SOFTWR in nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
+        for SOFTWR in linux-headers nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
         do
-            #First lets see if the package is there
-            if yay -Qs $SOFTWR > /dev/null ; then
-                echo -e "$COK - $SOFTWR is already installed."
-            else
-                echo -e "$CNT - Now installing $SOFTWR ..."
-                yay -S --noconfirm $SOFTWR &>> $INSTLOG
-                if yay -Qs $SOFTWR > /dev/null ; then
-                    echo -e "$COK - $SOFTWR was installed."
-                else
-                    echo -e "$CER - $SOFTWR install had failed, please check the install.log"
-                    exit
-                fi
-            fi
+            install_software $SOFTWR
         done
     
         #update config
@@ -162,61 +174,25 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
 
-    #Stage 1
+    #Stage 1 - main components
     echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
-    for SOFTWR in hyprland kitty waybar-hyprland swww swaylock-effects wofi wlogout mako xdg-desktop-portal-hyprland swappy grim slurp thunar
+    for SOFTWR in hyprland kitty jq mako waybar-hyprland swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar
     do
-        #First lets see if the package is there
-        if yay -Qs $SOFTWR > /dev/null ; then
-            echo -e "$COK - $SOFTWR is already installed."
-        else
-            echo -e "$CNT - Now installing $SOFTWR ..."
-            yay -S --noconfirm $SOFTWR &>> $INSTLOG
-            if yay -Qs $SOFTWR > /dev/null ; then
-                echo -e "$COK - $SOFTWR was installed."
-            else
-                echo -e "$CER - $SOFTWR install had failed, please check the install.log"
-                exit
-            fi
-        fi
+           install_software $SOFTWR 
     done
 
-    #Stage 2
+    #Stage 2 - more tools
     echo -e "$CNT - Stage 2 - Installing additional tools and utilities, this may take a while..."
     for SOFTWR in polkit-gnome python-requests pamixer pavucontrol brightnessctl bluez bluez-utils blueman network-manager-applet gvfs thunar-archive-plugin file-roller btop pacman-contrib
     do
-        #First lets see if the package is there
-        if yay -Qs $SOFTWR > /dev/null ; then
-            echo -e "$COK - $SOFTWR is already installed."
-        else
-            echo -e "$CNT - Now installing $SOFTWR ..."
-            yay -S --noconfirm $SOFTWR &>> $INSTLOG
-            if yay -Qs $SOFTWR > /dev/null ; then
-                echo -e "$COK - $SOFTWR was installed."
-            else
-                echo -e "$CER - $SOFTWR install had failed, please check the install.log"
-                exit
-            fi
-        fi
+        install_software $SOFTWR
     done
 
-    #Stage 3
+    #Stage 3 - some visual tools
     echo -e "$CNT - Stage 3 - Installing theme and visual related tools and utilities, this may take a while..."
     for SOFTWR in starship ttf-jetbrains-mono-nerd noto-fonts-emoji lxappearance xfce4-settings sddm-git sddm-sugar-candy-git 
     do
-        #First lets see if the package is there
-        if yay -Qs $SOFTWR > /dev/null ; then
-            echo -e "$COK - $SOFTWR is already installed."
-        else
-            echo -e "$CNT - Now installing $SOFTWR ..."
-            yay -S --noconfirm $SOFTWR &>> $INSTLOG
-            if yay -Qs $SOFTWR > /dev/null ; then
-                echo -e "$COK - $SOFTWR was installed."
-            else
-                echo -e "$CER - $SOFTWR install had failed, please check the install.log"
-                exit
-            fi
-        fi
+        install_software $SOFTWR
     done
 
     # Start the bluetooth service
@@ -327,7 +303,10 @@ if [[ $ROG == "Y" || $ROG == "y" ]]; then
     sudo pacman -Suy --noconfirm &>> $INSTLOG
 
     echo -e "$CNT - Installing ROG pacakges..."
-    sudo pacman -S --noconfirm asusctl supergfxctl rog-control-center &>> $INSTLOG
+    install_software asusctl
+    install_software supergfxctl
+    install_software rog-control-center
+
     echo -e "$CNT - Activating ROG services..."
     sudo systemctl enable --now power-profiles-daemon.service &>> $INSTLOG
     sleep 2
