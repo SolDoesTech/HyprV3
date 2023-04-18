@@ -75,7 +75,17 @@ elif [[ "$1" == "setbg" ]]; then
     set_current_background
 fi
 
-#always send back the version
+# need to show the version and tooltip
 get_ver
-#echo $VER
-echo '{"text": "'$VER'", "tooltip": "Default Keybinds\nSUPER + Q: Start Kitty\nSUPER + F4: Close Window\nSUPER + L: Lock Screen\nSUPER + M: Logout menu\nSUPER + E: File Manager\nSUPER + V: Toggle Float\nSUPER + SPACE: App Launcher\nSUPER + S: Screenshot"}'
+
+TOOLTIP='Default Keybinds\n'\
+'SUPER + Q = Start Kitty\n'\
+'SUPER + F4 = Close Window\n'\
+'SUPER + L = Lock Screen\n'\
+'SUPER + M = Logout menu\n'\
+'SUPER + E = File Manager\n'\
+'SUPER + V + Toggle Float\n'\
+'SUPER + SPACE = App Launcher\n'\
+'SUPER + S = Screenshot'
+
+echo '{"text": "'$VER'", "tooltip": "'$TOOLTIP'"}'
