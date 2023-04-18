@@ -53,7 +53,10 @@
         "all-outputs": true,
         "tooltip-format": "{title}",
         "on-click": "activate",
-        "on-click-middle": "close"
+        "on-click-middle": "close",
+        "ignore-list": [
+            "wofi"
+         ]
     },
 
     "cpu": {
