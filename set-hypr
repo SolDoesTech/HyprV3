@@ -164,7 +164,7 @@ install_software() {
 read -rep $'[\e[1;33mACTION\e[0m] - Would you like to install the packages? (y,n) ' INST
 if [[ $INST == "Y" || $INST == "y" ]]; then
     # Setup Nvidia if it was selected
-    if [[ $ISNVIDIA ]]; then
+    if [[ "$ISNVIDIA" == true ]]; then
         echo -e "$CNT - Nvidia setup stage, this may take a while..."
         for SOFTWR in linux-headers nvidia-dkms qt5-wayland qt5ct libva libva-nvidia-driver-git
         do
@@ -265,7 +265,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     # stage the .desktop file
     sudo cp Extras/hyprland.desktop /usr/share/wayland-sessions/
     
-    if [[ $ISNVIDIA ]]; then
+    if [[ "$ISNVIDIA" == true ]]; then
         # setup nvidia startup file
         cp Extras/start-hypr-nvidia ~/.start-hypr-nvidia
         sudo sed -i 's/Exec=Hyprland/Exec=\/home\/'$USER'\/.start-hypr-nvidia/' /usr/share/wayland-sessions/hyprland.desktop
@@ -326,7 +326,7 @@ fi
 
 ### Script is done ###
 echo -e "$CNT - Script had completed!"
-if [[ $ISNVIDIA ]]; then 
+if [[ "$ISNVIDIA" == true ]]; then 
     echo -e "$CAT - Since we attempted to setup Nvidia the script will now end and you should reboot.
     type 'reboot' at the prompt and hit Enter when ready."
     exit
