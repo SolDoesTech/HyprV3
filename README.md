@@ -3,7 +3,7 @@ This is V3 of the Hyprland install script
 
 collection of dot config files for hyprland with a simple install script for a fresh Arch linux with yay
 
-You can grab the config files and install packages by hand with this commnad
+You can grab the config files and install packages by hand with this command
 
 Do this ONLY if you need Nvidia support (do this first)
 ```
