@@ -174,7 +174,7 @@
 
     "custom/updates": {
         "format": "{}",
-        "exec": "~/.config/Hyprv/waybar/scripts/update-sys",
+        "exec": "~/.config/HyprV/waybar/scripts/update-sys",
         "on-click": "~/.config/HyprV/waybar/scripts/update-sys update",
         "interval": 300,
         "tooltip": true
