@@ -21,8 +21,7 @@ get_ver() {
 set_current_background() {
     get_theme
     get_ver
-    #start swwww
-    swww query || swww init
+    
     #set the current background
     if [[ $THEMEIS == "dark.css" ]]; then
         swww img ~/.config/HyprV/backgrounds/$VER'-background-dark.jpg'
