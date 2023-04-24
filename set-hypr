@@ -237,7 +237,7 @@ if [[ $CFG == "Y" || $CFG == "y" ]]; then
     done
 
     # link up the config files
-    echo -e "$CNT - Setting some up the new config..." 
+    echo -e "$CNT - Setting up the new config..." 
     cp ~/.config/HyprV/hypr/* ~/.config/hypr/
     ln -sf ~/.config/HyprV/kitty/kitty.conf ~/.config/kitty/kitty.conf
     ln -sf ~/.config/HyprV/mako/conf/config-dark ~/.config/mako/config
