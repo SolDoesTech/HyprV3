@@ -62,6 +62,9 @@ switch_version() {
     #set the background
     swww img ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg --transition-fps 60 --transition-type wipe --transition-duration 2
 
+    #update the sddm image
+    cp -f ~/.config/HyprV/backgrounds/$VERTO'background'$SWITCHTO.jpg /usr/share/sddm/themes/sdt/wallpaper.jpg
+
     #restart the waybr
     pkill waybar
     exec waybar
