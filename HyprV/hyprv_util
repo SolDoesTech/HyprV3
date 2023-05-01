@@ -86,7 +86,7 @@ TOOLTIP='Default Keybinds\n'\
 'SUPER + L = Lock Screen\n'\
 'SUPER + M = Logout menu\n'\
 'SUPER + E = File Manager\n'\
-'SUPER + V + Toggle Float\n'\
+'SUPER + V = Toggle Float\n'\
 'SUPER + SPACE = App Launcher\n'\
 'SUPER + S = Screenshot'
 
