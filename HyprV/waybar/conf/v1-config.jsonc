@@ -96,7 +96,7 @@
 
     "pulseaudio#microphone": {
         "format": "{format_source}",
-        "format-source": " {volume}%",
+        "format-source": " {volume}%",
         "format-source-muted": " Muted",
         "on-click": "~/.config/HyprV/waybar/scripts/volume --toggle-mic",
         "on-click-right": "pavucontrol",
@@ -116,7 +116,7 @@
     "network": {
         // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": "  {signalStrength}%",
-        "format-ethernet": "{ipaddr}/{cidr} ",
+        "format-ethernet": "{ipaddr}/{cidr}",
         "tooltip-format": "{essid} - {ifname} via {gwaddr}",
         "format-linked": "{ifname} (No IP)",
         "format-disconnected": "Disconnected ⚠",
