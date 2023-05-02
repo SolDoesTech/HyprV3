@@ -111,7 +111,7 @@
         "format-plugged": " {capacity}%",
         "format-alt-click": "click-right",
         "format-alt": "{icon} {capacity}%",
-        "format-icons": ["", "", "", "", "", "", "", "", "", "", ""]
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "pulseaudio": {
@@ -137,15 +137,15 @@
 
     "pulseaudio#microphone": {
         "format": "{format_source}",
-        "format-source": "",
-        "format-source-muted": "",
+        "format-source": "",
+        "format-source-muted": "",
         "on-click": "~/.config/HyprV/waybar/scripts/volume --toggle-mic",
         "on-click-right": "pavucontrol",
         "on-scroll-up": "~/.config/HyprV/waybar/scripts/volume --mic-inc",
         "on-scroll-down": "~/.config/HyprV/waybar/scripts/volume --mic-dec",
         "scroll-step": 5,
         "tooltip": true,
-        "tooltip-format": " at {volume}%"
+        "tooltip-format": " at {volume}%"
     },
 
     "backlight": {
@@ -153,7 +153,7 @@
         "format": "{icon}",
         "format-alt-click": "click-right",
         "format-alt": "{icon} {percent}%",
-        "format-icons": ["", "", ""],
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
         "on-scroll-up": "~/.config/HyprV/waybar/scripts/brightness --inc",
         "on-scroll-down": "~/.config/HyprV/waybar/scripts/brightness --dec"
     },
