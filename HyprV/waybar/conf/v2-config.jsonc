@@ -17,7 +17,7 @@
 
     "custom/launch_wofi": {
         "format": "",
-        "on-click": "pkill wofi || wofi",
+        "on-click": "sh -c '(sleep 0.5s; wofi)' & disown",
         "tooltip": false
     },
 
