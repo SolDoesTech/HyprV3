@@ -55,7 +55,7 @@
     "backlight": {
         "device": "intel_backlight",
         "format": "{icon} {percent}%",
-        "format-icons": ["", "", ""],
+        "format-icons": ["󰃞", "󰃟", "󰃠"],
         "on-scroll-up": "~/.config/HyprV/waybar/scripts/brightness --inc",
         "on-scroll-down": "~/.config/HyprV/waybar/scripts/brightness --dec",
         "min-length": 6
@@ -71,7 +71,7 @@
         "format-charging": " {capacity}%",
         "format-plugged": " {capacity}%",
         "format-alt": "{time} {icon}",
-        "format-icons": ["", "", "", "", "", "", "", "", "", "", ""]
+        "format-icons": ["󰂎", "󰁺", "󰁻", "󰁼", "󰁽", "󰁾", "󰁿", "󰂀", "󰂁", "󰂂", "󰁹"]
     },
 
     "pulseaudio": {
@@ -96,8 +96,8 @@
 
     "pulseaudio#microphone": {
         "format": "{format_source}",
-        "format-source": " {volume}%",
-        "format-source-muted": " Muted",
+        "format-source": " {volume}%",
+        "format-source-muted": " Muted",
         "on-click": "~/.config/HyprV/waybar/scripts/volume --toggle-mic",
         "on-click-right": "pavucontrol",
         "on-scroll-up": "~/.config/HyprV/waybar/scripts/volume --mic-inc",
@@ -117,8 +117,8 @@
         // "interface": "wlp2*", // (Optional) To force the use of this interface
         "format-wifi": "  {signalStrength}%",
         "format-ethernet": "{ipaddr}/{cidr} ",
-        "tooltip-format": "{essid} - {ifname} via {gwaddr} ",
-        "format-linked": "{ifname} (No IP) ",
+        "tooltip-format": "{essid} - {ifname} via {gwaddr}",
+        "format-linked": "{ifname} (No IP)",
         "format-disconnected": "Disconnected ⚠",
         "format-alt": "{ifname}:{essid} {ipaddr}/{cidr}"
     },
