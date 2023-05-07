@@ -177,9 +177,15 @@ if [[ $INST == "Y" || $INST == "y" ]]; then
         echo -e "options nvidia-drm modeset=1" | sudo tee -a /etc/modprobe.d/nvidia.conf &>> $INSTLOG
     fi
 
+    #setup the waybar with a fix - thankyou @Mrt
+    echo -e "$CNT - Installing Waybar with fix"
+    install_software gcc12
+    export CC=gcc-12 CXX=g++-12
+    install_software waybar-hyprland
+
     # Stage 1 - main components
     echo -e "$CNT - Stage 1 - Installing main components, this may take a while..."
-    for SOFTWR in hyprland kitty jq mako waybar-hyprland-git swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar
+    for SOFTWR in hyprland kitty jq mako swww swaylock-effects wofi wlogout xdg-desktop-portal-hyprland swappy grim slurp thunar
     do
            install_software $SOFTWR 
     done
